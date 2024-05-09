@@ -1,1 +1,1 @@
-php ./tools/phpunit.phar ./tests/TestAssert.test.php
+php tools/phpunit.phar --configuration ./tools/phpunit.xml
