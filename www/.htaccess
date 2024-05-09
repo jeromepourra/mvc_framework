@@ -1,0 +1,16 @@
+#####################################################
+# N'affiche pas la liste des fichiers d'un répértoire
+#####################################################
+Options -Indexes
+
+
+############################################
+# Redirect toutes les URL vers www/begin.php
+# Sauf les dossier www/public/ et www/ajax/
+############################################
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteCond %{REQUEST_URI} \.php$ [NC]
+	RewriteRule (^.*$) root.php?url=$1 [L,QSA]
+</IfModule>

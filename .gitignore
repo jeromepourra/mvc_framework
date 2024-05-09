@@ -1,0 +1,10 @@
+# Extensions
+*.sql
+*.env
+*.txt
+
+# Dossier des logs
+logs/
+
+# Dossier des fichiers temporaires
+tmp/
