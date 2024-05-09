@@ -17,4 +17,4 @@ jobs:
         run: echo "The ${{ github.repository }} repository has been cloned"
 
       - name: Run phpunit.phar
-        run: bash phpunit.sh
+        run: bash tools/phpunit.sh
