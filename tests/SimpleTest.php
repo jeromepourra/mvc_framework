@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-final class SimpleTest extends TestCase
+class SimpleTest extends TestCase
 {
 	public function testTrue(): void
 	{
