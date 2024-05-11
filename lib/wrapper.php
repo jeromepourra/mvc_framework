@@ -18,7 +18,6 @@
  */
 
 use lib\App;
-use lib\Controller;
 use lib\Logger;
 use lib\Config;
 use lib\Session;
@@ -42,11 +41,6 @@ function Session(): Session
 function Document(): Document
 {
 	return Document::Instance();
-}
-
-function Controller(): Controller
-{
-	return Controller::Instance();
 }
 
 function LOGDEBUG(string $message, mixed ...$args): void
