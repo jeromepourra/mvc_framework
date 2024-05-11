@@ -5,8 +5,7 @@ Options -Indexes
 
 
 ############################################
-# Redirect toutes les URL vers www/begin.php
-# Sauf les dossier www/public/ et www/ajax/
+# Redirect toutes les URL php vers www/root.php
 ############################################
 <IfModule mod_rewrite.c>
 	RewriteEngine On
