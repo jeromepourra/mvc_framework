@@ -11,6 +11,7 @@
 */
 
 require __DIR__ . "/lib/wrapper.php";
+require __DIR__ . "/lib/Singleton.class.php";
 require __DIR__ . "/lib/App.class.php";
 
 App()->buildRootPath(__DIR__);
