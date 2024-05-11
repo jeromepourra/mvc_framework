@@ -12,8 +12,6 @@ use Exception;
  ** class de configuration globale de l'application
  ** instancié au bootstrap et accessible partout
  **
- ** 
- **
  **************************************************
  */
 
