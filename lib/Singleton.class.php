@@ -7,7 +7,7 @@ namespace lib;
  ** Singleton [abstract]
  **************************************************
  **
- ** classe abstraire d'instance unique
+ ** classe abstraite d'instance unique
  ** peut être etendu à n'importe quelle classe de l'app
  ** en appellant la méthode Instance() on renverra toujours
  ** la même instance de l'object enfant
