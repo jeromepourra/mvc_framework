@@ -2,25 +2,10 @@
 
 namespace lib;
 
-class App
+class App extends Singleton
 {
-
-	private static ?App $instance = null;
-	
 	private string $urlRoot;
 	private string $docRoot;
-
-	public static function Instance()
-	{
-		if (self::$instance === null) {
-			self::$instance = new App();
-		}
-		return self::$instance;
-	}
-
-	private function __construct()
-	{
-	}
 
 	public function redirect(string $path, int $code = 200): void
 	{
@@ -68,17 +53,28 @@ class App
 		return $this->buildPath($this->docRoot . "www/templates/", $path);
 	}
 
+	/**
+	 * Construit un chemin relatif vers la racine du projet
+	 * 
+	 * Compare la différence des paths entre la racine et le current working directory (cwd)
+	 * Remonte le fil jusqu'à la racine à partir du cwd
+	 */
 	private function buildRoot(string $baseDir): string
 	{
-		$pathDiff = str_replace($baseDir, "", getcwd());
-		$pathDiffList = explode(DIRECTORY_SEPARATOR, $pathDiff);
+
+		// Root: 	C://
+		// Cwd: 	C://www/xxx
+
+		$pathDiff = str_replace($baseDir, "", getcwd()); // www/xxx
+		$pathDiffList = explode(DIRECTORY_SEPARATOR, $pathDiff); // ["www", "xxx"]
 		$maker = function (string $path, string $item): string {
 			if (!empty ($item)) {
-				$path .= "../";
+				$path .= "../"; // remplace item par ../
 			}
 			return $path;
 		};
-		return array_reduce($pathDiffList, $maker, "./");
+		return array_reduce($pathDiffList, $maker, "./"); // ./../..
+		
 	}
 
 	private function buildPath(string $root, string $path = ""): string
