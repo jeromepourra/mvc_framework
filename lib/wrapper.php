@@ -20,6 +20,7 @@
 use lib\App;
 use lib\Logger;
 use lib\Config;
+use lib\Router;
 use lib\Session;
 use lib\Document;
 
@@ -41,6 +42,11 @@ function Session(): Session
 function Document(): Document
 {
 	return Document::Instance();
+}
+
+function Router(): Router
+{
+	return Router::Instance();
 }
 
 function LOGDEBUG(string $message, mixed ...$args): void
