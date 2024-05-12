@@ -2,25 +2,21 @@
 
 require "./../bootstrap.php";
 
-$sUrl = Controller()->getGET("url");
-Controller()->unsetGET("url"); // plus aucune utilité une fois stocké
+if (isset($_GET['url'])) {
 
-if ($sUrl !== null) {
+	$sUrl = $_GET['url'];
+	unset($_GET['url']);
 
 	if (empty($sUrl)) {
 		// si la chaine est vide -> $sUrl = "/index.php"
 		$sUrl = "/index.php";
 	}
 
-	$sFilePath = App()->mkWebPath($sUrl);
+	$oController = Router()->loadController($sUrl);
+	$oController->run();
 
-	if (file_exists($sFilePath)) {
-		LOGDEBUG("Load page: %s", $sFilePath);
-		require_once $sFilePath;
-	} else {
-		LOGDEBUG("Try to load unexisting page: %s", $sFilePath);
-	}
-
+} else {
+	LOGWARNING("url is not defined on query");
 }
 
 require "./../end.php";
