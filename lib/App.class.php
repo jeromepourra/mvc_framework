@@ -7,12 +7,6 @@ class App extends Singleton
 	private string $urlRoot;
 	private string $docRoot;
 
-	public function redirect(string $path, int $code = 200): void
-	{
-		header("Location: " . App()->mkUrl($path));
-		die;
-	}
-
 	public function buildRootPath(string $baseDir)
 	{
 		$this->docRoot = $this->buildRoot($baseDir);
