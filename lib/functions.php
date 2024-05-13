@@ -48,7 +48,7 @@ function EncodeJSON(mixed $data, bool $pretty = false, int $flags = 0): ?string
 
 function Dumper(mixed $data)
 {
-	return EncodeJSON($data, true, JSON_UNESCAPED_UNICODE);
+	return EncodeJSON($data, true, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 }
 
 // 
