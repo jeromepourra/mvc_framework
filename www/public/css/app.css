@@ -1,0 +1,88 @@
+:root {
+
+	--color-text-light: #e4e4e4;
+	--color-text-dark: #1c1c1c;
+	--color-background: #1c1c1c;
+	--color-primary: #7d97ff;
+
+	--color-success-light: #d2ffc6;
+	--color-warning-light: #ffe5c6;
+	--color-error-light: #ffc6c6;
+
+	--color-success: #97ff7a;
+	--color-warning: #ffc57f;
+	--color-error: #ff8585;
+
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	color: var(--color-text-light);
+	font-family: Poppins, Verdana, Tahoma, Arial, Helvetica, sans-serif;
+}
+
+h1 {
+	font-size: 36px;
+	font-weight: 600;
+}
+
+input,
+button {
+	width: 100%;
+	color: inherit;
+	font-size: inherit;
+	font-family: inherit;
+}
+
+#root {
+	display: flow-root;
+	min-height: 100vh;
+	background-color: var(--color-background);
+}
+
+#messages-section {
+	padding: 1rem;
+}
+
+#alerts-box {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+#messages-section .alert {
+	max-width: max-content;
+	margin-bottom: 0.5rem;
+	padding: 0.25rem 1rem;
+	border-radius: 5px;
+	border: 1px solid;
+	color: var(--color-text-dark);
+	font-size: 14px;
+	line-height: 1.2;
+}
+
+#messages-section .alert:last-child {
+	margin-bottom: 0;
+}
+
+#messages-section .alert.success {
+	border-color: var(--color-success);
+	background-color: var(--color-success-light);
+}
+
+#messages-section .alert.warning {
+	border-color: var(--color-warning);
+	background-color: var(--color-warning-light);
+}
+
+#messages-section .alert.error {
+	border-color: var(--color-error);
+	background-color: var(--color-error-light);
+}
+
+#messages-section .alert p {
+	margin: 0;
+}
