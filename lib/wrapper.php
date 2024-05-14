@@ -20,9 +20,9 @@
 use lib\App;
 use lib\Logger;
 use lib\Config;
-use lib\Router;
 use lib\Session;
 use lib\Document;
+use core\router\Router;
 
 function App(): App
 {

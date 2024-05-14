@@ -1,22 +1,9 @@
 <?php
+use www\controllers\HomeController;
 
 require "./../bootstrap.php";
 
-if (isset($_GET['url'])) {
-
-	$sUrl = $_GET['url'];
-	unset($_GET['url']);
-
-	if (empty($sUrl)) {
-		// si la chaine est vide -> $sUrl = "/index.php"
-		$sUrl = "/index.php";
-	}
-
-	$oController = Router()->loadController($sUrl);
-	$oController->run();
-
-} else {
-	LOGWARNING("url is not defined on query");
-}
+Router()->register(HomeController::class);
+Router()->load($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
 require "./../end.php";
