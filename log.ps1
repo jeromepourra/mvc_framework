@@ -1,2 +1,2 @@
 Write-Host "Waiting for logs..."
-Get-Content -Tail 0 logs/error.log -Wait
+Get-Content -Tail 0 logs/error.log -Encoding UTF8 -Wait
