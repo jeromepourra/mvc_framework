@@ -2,6 +2,8 @@
 namespace core\router;
 
 use core\controller\Controller;
+use core\response\Response;
+use core\response\ResponseCode;
 use lib\Singleton;
 use ReflectionClass;
 
@@ -69,9 +71,7 @@ class Router extends Singleton
 
 		}
 
-		// 404
-		http_response_code(404);
-		die;
+		Response::SendCode(ResponseCode::NOT_FOUND);
 
 	}
 
