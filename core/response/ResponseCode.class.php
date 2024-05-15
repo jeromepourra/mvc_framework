@@ -1,7 +1,15 @@
 <?php
 
-/**
- * Dictionnaire de codes de réponses HTTP
+namespace core\response;
+
+/*
+ **************************************************
+ ** ResponseCode
+ **************************************************
+ **
+ ** simple dictionnaire de codes pour réponses HTTP
+ **
+ **************************************************
  */
 
 class ResponseCode
