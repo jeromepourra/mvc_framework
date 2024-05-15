@@ -1,6 +1,6 @@
 <?php
 
-namespace www\controllers;
+namespace src\controller;
 use core\router\Route;
 
 class HomeController
