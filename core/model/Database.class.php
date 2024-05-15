@@ -80,7 +80,8 @@ class Database extends Singleton
 			LOGERROR("invalid statement");
 		}
 
-		$mData = $this->statement->fetch($nMode);
+		$this->fetchMode($nMode);
+		$mData = $this->statement->fetch();
 		return $mData;
 
 	}
@@ -91,7 +92,8 @@ class Database extends Singleton
 			LOGERROR("invalid statement");
 		}
 
-		$mData = $this->statement->fetchAll($nMode);
+		$this->fetchMode($nMode);
+		$mData = $this->statement->fetchAll();
 		return $mData;
 	}
 
@@ -106,7 +108,7 @@ class Database extends Singleton
 			LOGERROR("invalid statement");
 		}
 
-		$oModed = $this->statement->setFetchMode(PDO::FETCH_CLASS, $sClass); 
+		$this->statement->setFetchMode(PDO::FETCH_CLASS, $sClass);
 		$oData = $this->statement->fetch();
 		return $oData;
 	}
@@ -122,7 +124,7 @@ class Database extends Singleton
 			LOGERROR("invalid statement");
 		}
 
-		$oModed = $this->statement->setFetchMode(PDO::FETCH_CLASS, $sClass); 
+		$this->statement->setFetchMode(PDO::FETCH_CLASS, $sClass);
 		$oData = $this->statement->fetchAll();
 		return $oData;
 	}
@@ -134,16 +136,4 @@ class Database extends Singleton
 		}
 	}
 
-}
-
-
-class User
-{
-	public ?int $id = null;
-	public ?string $name = null;
-	public ?string $password = null;
-
-	public function __construct()
-	{
-	}
 }
