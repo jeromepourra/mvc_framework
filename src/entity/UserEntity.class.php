@@ -2,7 +2,7 @@
 
 namespace src\entity;
 
-class User
+class UserEntity
 {
 	public ?int $id = null;
 	public ?string $name = null;
