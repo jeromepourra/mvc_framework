@@ -23,19 +23,19 @@ abstract class Singleton
 	 * récupère ou créé (si non existance)
 	 * l'instance unique de la class enfant
 	 */
-	final public static function Instance(): self
+	final public static function Instance(mixed ...$args): static
 	{
 		$sChild = get_called_class();
 		if (!array_key_exists($sChild, self::$instance)) {
-			self::$instance[$sChild] = new $sChild;
+			self::$instance[$sChild] = new $sChild(...$args);
 		}
 		return self::$instance[$sChild];
 	}
 
 	/**
-	 * pas d'instantiation en dehors d'ici ou de la class enfant
+	 * pas d'instantiation en dehors d'ici
 	 */
-	protected function __construct()
+	private function __construct()
 	{
 	}
 
