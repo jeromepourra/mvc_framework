@@ -30,11 +30,6 @@ class Database extends Singleton
 		}
 	}
 
-	private function validStatement(): bool
-	{
-		return $this->statement instanceof PDOStatement;
-	}
-
 	public function prepare(string $sQuery): void
 	{
 		$this->statement = $this->pdo->prepare($sQuery);
@@ -51,10 +46,6 @@ class Database extends Singleton
 	 */
 	public function bind(array $aBind, ): void
 	{
-		if (!$this->validStatement()) {
-			LOGERROR("invalid statement");
-		}
-
 		if (!empty($bind)) {
 			foreach ($aBind as $name => $value) {
 				$this->statement->bindValue($name, $value);
@@ -64,10 +55,6 @@ class Database extends Singleton
 
 	public function execute(): void
 	{
-		if (!$this->validStatement()) {
-			LOGERROR("invalid statement");
-		}
-
 		$bExecuted = $this->statement->execute();
 		if (!$bExecuted) {
 			LOGERROR("can't execute query: %s", $this->statement->queryString);
@@ -76,10 +63,6 @@ class Database extends Singleton
 
 	public function fetch(int $nMode = PDO::FETCH_ASSOC): mixed
 	{
-		if (!$this->validStatement()) {
-			LOGERROR("invalid statement");
-		}
-
 		$this->fetchMode($nMode);
 		$mData = $this->statement->fetch();
 		return $mData;
@@ -88,10 +71,6 @@ class Database extends Singleton
 
 	public function fetchAll(int $nMode = PDO::FETCH_ASSOC): mixed
 	{
-		if (!$this->validStatement()) {
-			LOGERROR("invalid statement");
-		}
-
 		$this->fetchMode($nMode);
 		$mData = $this->statement->fetchAll();
 		return $mData;
@@ -104,10 +83,6 @@ class Database extends Singleton
 	 */
 	public function fetchObj(string $sClass)
 	{
-		if (!$this->validStatement()) {
-			LOGERROR("invalid statement");
-		}
-
 		$this->statement->setFetchMode(PDO::FETCH_CLASS, $sClass);
 		$oData = $this->statement->fetch();
 		return $oData;
@@ -120,10 +95,6 @@ class Database extends Singleton
 	 */
 	public function fetchAllObj(string $sClass)
 	{
-		if (!$this->validStatement()) {
-			LOGERROR("invalid statement");
-		}
-
 		$this->statement->setFetchMode(PDO::FETCH_CLASS, $sClass);
 		$oData = $this->statement->fetchAll();
 		return $oData;
