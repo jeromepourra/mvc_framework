@@ -17,7 +17,7 @@ namespace lib;
 
 abstract class Singleton
 {
-	private static array $instance = [];
+	private static array $instances = [];
 
 	/**
 	 * récupère ou créé (si non existance)
@@ -26,10 +26,10 @@ abstract class Singleton
 	final public static function Instance(mixed ...$args): static
 	{
 		$sChild = get_called_class();
-		if (!array_key_exists($sChild, self::$instance)) {
-			self::$instance[$sChild] = new $sChild(...$args);
+		if (!array_key_exists($sChild, self::$instances)) {
+			self::$instances[$sChild] = new $sChild(...$args);
 		}
-		return self::$instance[$sChild];
+		return self::$instances[$sChild];
 	}
 
 	/**
