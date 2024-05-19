@@ -1,6 +1,7 @@
 <?php
-use www\controllers\HomeController;
-use www\controllers\TestController;
+
+use src\controller\HomeController;
+use src\controller\TestController;
 
 require "./../bootstrap.php";
 
