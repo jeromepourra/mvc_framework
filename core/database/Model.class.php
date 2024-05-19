@@ -11,7 +11,7 @@ abstract class Model
 	protected string $table; 				// Table associé a l'entité
 	protected string $entity; 				// Le nom de class de l'entité
 
-	// Pour éviter les erreurs c'est le parent qui s'occupe de l'instantiation
+	// L'instantiation se fait toujours ici pas d'override possible
 	public final function __construct()
 	{
 
