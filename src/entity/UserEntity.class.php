@@ -2,13 +2,11 @@
 
 namespace src\entity;
 
-class UserEntity
+use core\database\Entity;
+
+class UserEntity extends Entity
 {
 	public ?int $id = null;
 	public ?string $name = null;
 	public ?string $password = null;
-
-	public function __construct()
-	{
-	}
 }
