@@ -6,6 +6,7 @@ use core\router\Route;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 
 class Controller
 {
@@ -13,7 +14,7 @@ class Controller
 	private Route $route;
 	private ReflectionClass $reflectClass;
 	private ReflectionMethod $reflectMethod;
-	/** @var \ReflectionParameter[] */
+	/** @var ReflectionParameter[] */
 	private array $reflectParams;
 
 	public function __construct(ReflectionClass $oReflectClass, ReflectionMethod $oReflectMethod, ReflectionAttribute $oReflectRoute)
