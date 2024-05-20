@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit 
-	colors="true"
-    bootstrap="./../tests/bootstrap.php"
->
+<phpunit colors="true" bootstrap="./../tests/bootstrap.php">
+
     <testsuite name="Mes tests">
         <directory>./../tests</directory>
     </testsuite>
+
+    <php>
+        <ini name="display_errors" value="true"/>
+		<const name="__PHPUNIT_RUNNING__" value="true"/>
+    </php>
 
 </phpunit>
