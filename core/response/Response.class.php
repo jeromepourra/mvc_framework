@@ -11,7 +11,11 @@ class Response
 	public static function SendCode(array $eCode)
 	{
 		if (isset($eCode['code']) && isset($eCode['message'])) {
-			header($_SERVER['SERVER_PROTOCOL'] . " " . $eCode['code'] . " " . $eCode['message']);
+			if (isset($_SERVER['SERVER_PROTOCOL'])) {
+				header($_SERVER['SERVER_PROTOCOL'] . " " . $eCode['code'] . " " . $eCode['message']);
+			} else {
+				header("HTTP/1.1 " . $eCode['code'] . " " . $eCode['message']);
+			}
 			die;
 		} else {
 			LOGERROR("bad parameter");
