@@ -3,7 +3,7 @@
 namespace core\database;
 
 use core\database\Query;
-use EQueryOperator;
+use core\database\EQueryOperator;
 
 abstract class Model
 {

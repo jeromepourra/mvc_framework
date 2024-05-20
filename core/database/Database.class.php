@@ -30,6 +30,11 @@ class Database extends Singleton
 		}
 	}
 
+	public function lastInsertId(): int
+	{
+		return $this->pdo->lastInsertId();
+	}
+
 	public function prepare(string $sQuery): self
 	{
 		$this->statement = $this->pdo->prepare($sQuery);
