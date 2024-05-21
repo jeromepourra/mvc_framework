@@ -26,7 +26,7 @@ class Database extends Singleton
 		try {
 			$this->pdo = new PDO($sDsn, Config()->get("DATABASE_USER_NAME"), Config()->get("DATABASE_USER_PASSWORD"));
 		} catch (PDOException $th) {
-			Response::SendCode(ResponseCode::INTERNAL_SERVER_ERROR);
+			throw new PDOException("can't connect to database");
 		}
 	}
 
