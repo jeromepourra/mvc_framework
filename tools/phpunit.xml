@@ -6,9 +6,4 @@
         <directory>./../tests</directory>
     </testsuite>
 
-    <php>
-        <ini name="display_errors" value="true"/>
-		<const name="__PHPUNIT_RUNNING__" value="true"/>
-    </php>
-
 </phpunit>
