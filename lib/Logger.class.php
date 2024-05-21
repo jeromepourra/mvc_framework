@@ -122,8 +122,13 @@ class Logger
 
 	private static function Trigger(int $level, string $message, mixed ...$args)
 	{
-		self::BacktraceSnapshot(0, 3);
-		trigger_error(sprintf($message, ...$args), $level);
+		// Voir fichier tools/phpunit.xml
+		if (!defined("__PHPUNIT_RUNNING__")) {
+			// Ramasse les erreurs depuis l'application
+			self::BacktraceSnapshot(0, 3);
+			trigger_error(sprintf($message, ...$args), $level);
+		}
+		// PHP Unit est lancé, laisse passer les erreurs
 	}
 
 	private static function IsFatal(int $level): bool

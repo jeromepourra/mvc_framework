@@ -1,11 +1,15 @@
 <?php
-namespace www\controllers;
+
+namespace src\controller;
+
 use core\router\Route;
 
-class TestController {
+class TestController
+{
 
 	#[Route(path: "/test", methods: ["GET"])]
-	public function test() {
+	public function test()
+	{
 		echo "TestController::test()";
 	}
 

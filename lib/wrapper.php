@@ -22,7 +22,9 @@ use lib\Logger;
 use lib\Config;
 use lib\Session;
 use lib\Document;
+
 use core\router\Router;
+use core\database\Database;
 
 function App(): App
 {
@@ -47,6 +49,11 @@ function Document(): Document
 function Router(): Router
 {
 	return Router::Instance();
+}
+
+function Database(): Database
+{
+	return Database::Instance();
 }
 
 function LOGDEBUG(string $message, mixed ...$args): void

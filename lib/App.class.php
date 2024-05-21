@@ -7,14 +7,32 @@ class App extends Singleton
 	private string $urlRoot;
 	private string $docRoot;
 
-	public function buildRootPath(string $baseDir)
+	protected function __construct()
 	{
-		$this->docRoot = $this->buildRoot($baseDir);
 	}
 
-	public function buildRootUrl(string $baseDir)
+	/**
+	 * Construit le chemin racine relatif depuis le current working directory
+	 * C://users/me/project_root/current/dir -> ./../../ = C://users/me/project_root
+	 */
+	public function buildRootPath(string $baseDir)
 	{
-		$this->urlRoot = $this->buildRoot($baseDir);
+		$cwd = $this->normalisePathSeparator(getcwd());
+		$baseDir = $this->normalisePathSeparator($baseDir);
+		$this->docRoot = $this->buildRoot($baseDir, $cwd);
+	}
+
+	/**
+	 * Construit le chemin racine relatif depuis l'URI de la requête
+	 * http://site.xyz/abc/def -> ./../../ = http://site.xyz
+	 */
+	public function buildRootUrl()
+	{
+		if (isset($_SERVER['REQUEST_URI'])) {
+			$this->urlRoot = $this->buildRoot("", $_SERVER['REQUEST_URI']);
+		} else {
+			$this->urlRoot = $this->buildRoot("", "/");
+		}
 	}
 
 	public function mkPath(string $path = ""): string
@@ -53,14 +71,14 @@ class App extends Singleton
 	 * Compare la différence des paths entre la racine et le current working directory (cwd)
 	 * Remonte le fil jusqu'à la racine à partir du cwd
 	 */
-	private function buildRoot(string $baseDir): string
+	private function buildRoot(string $baseDir, string $cwd): string
 	{
 
 		// Root: 	C://
 		// Cwd: 	C://www/xxx
 
-		$pathDiff = str_replace($baseDir, "", getcwd()); // www/xxx
-		$pathDiffList = explode(DIRECTORY_SEPARATOR, $pathDiff); // ["www", "xxx"]
+		$pathDiff = str_replace($baseDir, "", $cwd); // www/xxx
+		$pathDiffList = explode("/", $pathDiff); // ["www", "xxx"]
 		$maker = function (string $path, string $item): string {
 			if (!empty ($item)) {
 				$path .= "../"; // remplace item par ../
@@ -68,7 +86,7 @@ class App extends Singleton
 			return $path;
 		};
 		return array_reduce($pathDiffList, $maker, "./"); // ./../..
-		
+
 	}
 
 	private function buildPath(string $root, string $path = ""): string
@@ -76,8 +94,14 @@ class App extends Singleton
 		if (empty($path)) {
 			return $root;
 		} else {
+			$path = $this->normalisePathSeparator($path);
 			return $root . $path;
 		}
+	}
+
+	private function normalisePathSeparator(string $path)
+	{
+		return str_replace(DIRECTORY_SEPARATOR, "/", $path);
 	}
 
 }
