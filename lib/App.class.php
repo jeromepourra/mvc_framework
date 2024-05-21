@@ -7,6 +7,10 @@ class App extends Singleton
 	private string $urlRoot;
 	private string $docRoot;
 
+	protected function __construct()
+	{
+	}
+
 	/**
 	 * Construit le chemin racine relatif depuis le current working directory
 	 * C://users/me/project_root/current/dir -> ./../../ = C://users/me/project_root
@@ -14,6 +18,7 @@ class App extends Singleton
 	public function buildRootPath(string $baseDir)
 	{
 		$cwd = $this->normalisePathSeparator(getcwd());
+		$baseDir = $this->normalisePathSeparator($baseDir);
 		$this->docRoot = $this->buildRoot($baseDir, $cwd);
 	}
 
@@ -81,7 +86,7 @@ class App extends Singleton
 			return $path;
 		};
 		return array_reduce($pathDiffList, $maker, "./"); // ./../..
-		
+
 	}
 
 	private function buildPath(string $root, string $path = ""): string
@@ -89,11 +94,13 @@ class App extends Singleton
 		if (empty($path)) {
 			return $root;
 		} else {
+			$path = $this->normalisePathSeparator($path);
 			return $root . $path;
 		}
 	}
 
-	private function normalisePathSeparator(string $path) {
+	private function normalisePathSeparator(string $path)
+	{
 		return str_replace(DIRECTORY_SEPARATOR, "/", $path);
 	}
 
