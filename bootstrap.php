@@ -25,9 +25,13 @@ require App()->mkPath("lib/functions.php");
 require App()->mkPath("lib/autoload.php");
 
 // Charge les variables d'environnement dans la config
-Config()->loadEnvFile(App()->mkPath(".env"));
+if (defined("__PHPUNIT_RUNNING__") && __PHPUNIT_RUNNING__ === true) {
+	Config()->loadEnvFile(App()->mkPath("_test.env"));
+} else {
+	Config()->loadEnvFile(App()->mkPath("_main.env"));
+}
 
 // Charge la configuration de PHP
-// require App()->mkPath("ini.php");
+require App()->mkPath("ini.php");
 
 BufferOn();
