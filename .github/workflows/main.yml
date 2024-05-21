@@ -24,14 +24,14 @@ jobs:
 
       - name: Create Database
         run: |
-          mysql -h 127.0.0.1 -P 3306 -u root -p password -e "CREATE DATABASE IF NOT EXISTS test;"
+          mysql -h127.0.0.1 -P3306 -uroot -ppassword -e"CREATE DATABASE IF NOT EXISTS test;"
 
       - name: Simple echo
         run: echo "Ici"
 
       - name: Load Database Schema
         run: |
-          mysql -h 127.0.0.1 -P3306 -u root -p password test < chemin/vers/votre/script.sql
+          mysql -h127.0.0.1 -P3306 -uroot -ppassword test < chemin/vers/votre/script.sql
 
       - name: Simple echo
         run: echo "Là"
