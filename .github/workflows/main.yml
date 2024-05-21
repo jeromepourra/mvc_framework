@@ -26,15 +26,12 @@ jobs:
         run: |
           mysql -h127.0.0.1 -P3306 -uroot -ppassword -e"CREATE DATABASE IF NOT EXISTS test;"
 
-      - name: Simple echo
-        run: echo "Ici"
-
       - name: Load Database Schema
         run: |
           mysql -h127.0.0.1 -P3306 -uroot -ppassword test < _test.sql
 
       - name: Simple echo
-        run: echo "Là"
+        run: echo "Database has been created and schema has been loaded"
 
       - name: Run phpunit.phar
         run: bash tools/phpunit.sh
