@@ -6,6 +6,9 @@
 # Fichier d'environnement de test
 !*_test.env
 
+# Fichier script sql de test
+!*_test.sql
+
 # Cache local de PHPunit
 tools/.phpunit.result.cache
 
