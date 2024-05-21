@@ -204,6 +204,17 @@ class Query
 		return $this;
 	}
 
+	// UPDATE
+	// ======
+
+	public function updateField(string $sColumn, mixed $mValue): self
+	{
+		$this->update[] = new QueryUpdate($sColumn, $mValue);
+		$this->bindIndex++; // Index du bind param au moment de construire la requête préparée
+		$this->bindings[] = new QueryUpdate($mValue, $this->bindIndex);
+		return $this;
+	}
+
 	// BUILDERS
 	// ========
 
@@ -238,6 +249,18 @@ class Query
 		$this->queryList[] = "(" . implode(",", array_map(function ($oInsert) {
 			return "?";
 		}, $this->insert)) . ")";
+	}
+
+	private function buildUpdate(): void
+	{
+		$this->queryList[] = EQueryStatement::UPDATE->value;
+		$this->queryList[] = $this->fromTable;
+
+		$this->queryList[] = EQueryClause::SET->value;
+
+		$this->queryList[] = implode(",", array_map(function ($oUpdate) {
+			return $oUpdate->column . " = ?";
+		}, $this->update));
 	}
 
 	private function buildFrom(): void
@@ -313,6 +336,10 @@ class Query
 
 		if ($this->useInsert) {
 			$this->buildInsert();
+		}
+
+		if ($this->useUpdate) {
+			$this->buildUpdate();
 		}
 
 		$this->buildJoin();

@@ -28,6 +28,6 @@ require App()->mkPath("lib/autoload.php");
 Config()->loadEnvFile(App()->mkPath(".env"));
 
 // Charge la configuration de PHP
-require App()->mkPath("ini.php");
+// require App()->mkPath("ini.php");
 
 BufferOn();
