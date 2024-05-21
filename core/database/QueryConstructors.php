@@ -6,7 +6,19 @@ use core\database\EQueryDoor;
 use core\database\EQueryJoin;
 use core\database\EQueryOperator;
 
-class QueryInsert {
+class QueryInsert
+{
+	public string $column;						// Colonne
+	public mixed $value;						// Valeur
+	public function __construct(string $sColumn, mixed $mValue)
+	{
+		$this->column = $sColumn;
+		$this->value = $mValue;
+	}
+}
+
+class QueryUpdate
+{
 	public string $column;						// Colonne
 	public mixed $value;						// Valeur
 	public function __construct(string $sColumn, mixed $mValue)

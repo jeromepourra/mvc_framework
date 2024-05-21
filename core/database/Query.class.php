@@ -23,13 +23,17 @@ class Query
 	private bool $useDelete = false;				// DELETE
 	private bool $useDistinct = false;				// DISTINCT
 
-	private ?string $table = null;					// Table SQL
+	private ?string $fromTable = null;				// Table de sélection
+	private ?string $intoTable = null;				// Table d'insertion
 
 	/** @var string[] */
 	private array $select = [];						// Fields de retour
 
 	/** @var QueryInsert[] */
 	private array $insert = [];						// Fields d'insertion
+
+	/** @var QueryUpdate[] */
+	private array $update = [];						// Fields de mise à jour
 
 	/** @var QueryJoin[] */
 	private array $joinList = []; 					// Liste des jointures
@@ -59,7 +63,8 @@ class Query
 	/**
 	 * Reset les types (statements) de requête
 	 */
-	private function clearUsed() {
+	private function clearUsed()
+	{
 		$this->useSelect = false;
 		$this->useInsert = false;
 		$this->useUpdate = false;
@@ -81,15 +86,31 @@ class Query
 		return $this;
 	}
 
+	public function update(): self
+	{
+		$this->clearUsed(); // Reset les types de requête
+		$this->useUpdate = true;
+		return $this;
+	}
+
 	public function distinct(): self
 	{
 		$this->useDistinct = true;
 		return $this;
 	}
 
+	// (new Query())->select()->from('table')
 	public function from(string $sTable): self
 	{
-		$this->table = $sTable;
+		$this->fromTable = $sTable;
+		return $this;
+	}
+
+	// Simple alias à la méthode from()
+	// (new Query())->insert()->into('table')
+	public function into(string $sTable): self
+	{
+		$this->intoTable = $sTable;
 		return $this;
 	}
 
@@ -188,70 +209,58 @@ class Query
 
 	private function buildSelect(): void
 	{
-		if (!empty($this->useSelect)) {
+		$this->queryList[] = EQueryStatement::SELECT->value;
 
-			// SELECT
-			$this->queryList[] = EQueryStatement::SELECT->value;
-
-			if ($this->useDistinct) {
-				// SELECT DISTINCT
-				$this->queryList[] = EQueryClause::DISTINCT->value;
-			}
-
-			// col1, col2, col3 -> nom des colonnes de la table à selectionner
-			if (empty($this->select)) {
-				$this->queryList[] = "*";
-			} else {
-				$this->queryList[] = implode(",", $this->select);
-			}
-
-			// SELECT col1,col2,col3
-
+		if ($this->useDistinct) {
+			$this->queryList[] = EQueryClause::DISTINCT->value;
 		}
+
+		if (empty($this->select)) {
+			$this->queryList[] = "*";
+		} else {
+			$this->queryList[] = implode(",", $this->select);
+		}
+
+		$this->buildFrom();
 	}
 
 	private function buildInsert(): void
 	{
-		if (!empty($this->useInsert)) {
+		$this->queryList[] = EQueryStatement::INSERT->value;
+		$this->buildInto();
 
-			$this->queryList[] = EQueryStatement::INSERT->value;
-			$this->queryList[] = $this->table;
+		$this->queryList[] = "(" . implode(",", array_map(function ($oInsert) {
+			return $oInsert->column;
+		}, $this->insert)) . ")";
 
-			// (col1,col2,col3) -> nom des colonnes de la table
-			$this->queryList[] = "(";
-			$this->queryList[] = implode(",", array_map(function ($oInsert) {
-				return $oInsert->column;
-			}, $this->insert));
-			$this->queryList[] = ")";
+		$this->queryList[] = EQueryClause::VALUES->value;
 
-			$this->queryList[] = EQueryClause::VALUES->value;
-
-			// (?,?,?) -> placeholders des valeurs à insérer
-			$this->queryList[] = "(";
-			$this->queryList[] = implode(",", array_map(function ($oInsert) {
-				return "?";
-			}, $this->insert));
-			$this->queryList[] = ")";
-
-			// INSERT INTO table (col1,col2,col3) VALUES (?,?,?)
-
-		}
+		$this->queryList[] = "(" . implode(",", array_map(function ($oInsert) {
+			return "?";
+		}, $this->insert)) . ")";
 	}
 
 	private function buildFrom(): void
 	{
-		if ($this->table) {
-			// FROM table
+		if ($this->fromTable !== null) {
 			$this->queryList[] = EQueryClause::FROM->value;
-			$this->queryList[] = $this->table;
+			$this->queryList[] = $this->fromTable;
 		}
 	}
+
+	private function buildInto(): void
+	{
+		if ($this->intoTable !== null) {
+			$this->queryList[] = EQueryClause::INTO->value;
+			$this->queryList[] = $this->intoTable;
+		}
+	}
+
 
 	private function buildJoin(): void
 	{
 		if ($this->joinList) {
 			foreach ($this->joinList as $oJoin) {
-				// INNER JOIN table ON col1 = col2
 				$this->queryList[] = $oJoin->type->value;
 				$this->queryList[] = EQueryClause::JOIN->value;
 				$this->queryList[] = $oJoin->table;
@@ -260,7 +269,6 @@ class Query
 				$this->queryList[] = $oJoin->operator->value;
 				$this->queryList[] = $oJoin->secondValue;
 			}
-			// INNER JOIN table1 ON col1 = col2 LEFT JOIN table2 ON col1 = col2 ...
 		}
 	}
 
@@ -307,7 +315,6 @@ class Query
 			$this->buildInsert();
 		}
 
-		$this->buildFrom();
 		$this->buildJoin();
 		$this->buildWhere();
 		$this->buildLimit();

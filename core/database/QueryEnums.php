@@ -5,13 +5,14 @@ namespace core\database;
 enum EQueryStatement: string {
 	case SELECT = "SELECT";
 	case UPDATE = "UPDATE";
-	case INSERT = "INSERT INTO";
+	case INSERT = "INSERT";
 	case DELETE = "DELETE";
 }
 
 enum EQueryClause: string {
 	
 	case FROM = "FROM";
+	case INTO = "INTO";
 	case DISTINCT = "DISTINCT";
 
 	case WHERE = "WHERE";
