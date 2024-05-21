@@ -1,8 +1,12 @@
 # Extensions
-*.sql
-*.env
 *.txt
+*.sql
 
+*.env
+# Fichier d'environnement de test
+!*_test.env
+
+# Cache local de PHPunit
 tools/.phpunit.result.cache
 
 # Dossier des logs
