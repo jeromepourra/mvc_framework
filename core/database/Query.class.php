@@ -23,6 +23,7 @@ class Query
 	private bool $useDelete = false;				// DELETE
 	private bool $useDistinct = false;				// DISTINCT
 
+	private ?string $table = null;					// Table de requête
 	private ?string $fromTable = null;				// Table de sélection
 	private ?string $intoTable = null;				// Table d'insertion
 
@@ -34,6 +35,8 @@ class Query
 
 	/** @var QueryUpdate[] */
 	private array $update = [];						// Fields de mise à jour
+
+	private string $delete = "";					// Table de suppression
 
 	/** @var QueryJoin[] */
 	private array $joinList = []; 					// Liste des jointures
@@ -93,21 +96,31 @@ class Query
 		return $this;
 	}
 
+	public function delete(): self
+	{
+		$this->clearUsed(); // Reset les types de requête
+		$this->useDelete = true;
+		return $this;
+	}
+
 	public function distinct(): self
 	{
 		$this->useDistinct = true;
 		return $this;
 	}
 
-	// (new Query())->select()->from('table')
+	public function table(string $sTable): self
+	{
+		$this->table = $sTable;
+		return $this;
+	}
+
 	public function from(string $sTable): self
 	{
 		$this->fromTable = $sTable;
 		return $this;
 	}
 
-	// Simple alias à la méthode from()
-	// (new Query())->insert()->into('table')
 	public function into(string $sTable): self
 	{
 		$this->intoTable = $sTable;
@@ -254,13 +267,19 @@ class Query
 	private function buildUpdate(): void
 	{
 		$this->queryList[] = EQueryStatement::UPDATE->value;
-		$this->queryList[] = $this->fromTable;
+		$this->queryList[] = $this->table;
 
 		$this->queryList[] = EQueryClause::SET->value;
 
 		$this->queryList[] = implode(",", array_map(function ($oUpdate) {
 			return $oUpdate->column . " = ?";
 		}, $this->update));
+	}
+
+	private function buildDelete(): void
+	{
+		$this->queryList[] = EQueryStatement::DELETE->value;
+		$this->buildFrom();
 	}
 
 	private function buildFrom(): void
@@ -340,6 +359,10 @@ class Query
 
 		if ($this->useUpdate) {
 			$this->buildUpdate();
+		}
+
+		if ($this->useDelete) {
+			$this->buildDelete();
 		}
 
 		$this->buildJoin();

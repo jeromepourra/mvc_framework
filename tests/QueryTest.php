@@ -160,82 +160,110 @@ class QueryTest extends TestCase
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
-	public function testInsert() {
+	public function testInsert()
+	{
 		$query = new Query();
 		$query->insert()
-		->into('table')
-		->insertField('column1', 'value1')
-		->insertField('column2', 'value2');
+			->into('table')
+			->insertField('column1', 'value1')
+			->insertField('column2', 'value2');
 
 		$expectedQuery = 'INSERT INTO table (column1,column2) VALUES (?,?)';
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
-	public function testInsertWithWhere() {
+	public function testInsertWithWhere()
+	{
 		$query = new Query();
 		$query->insert()
-		->into('table')
-		->insertField('column1', 'value1')
-		->insertField('column2', 'value2')
-		->where('column3', EQueryOperator::EQUAL, 'value3');
+			->into('table')
+			->insertField('column1', 'value1')
+			->insertField('column2', 'value2')
+			->where('column3', EQueryOperator::EQUAL, 'value3');
 
 		$expectedQuery = 'INSERT INTO table (column1,column2) VALUES (?,?) WHERE column3 = ?';
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
-	public function testInsertWithJoinAndWhereAndOr() {
+	public function testInsertWithJoinAndWhereAndOr()
+	{
 		$query = new Query();
 		$query->insert()
-		->into('table')
-		->insertField('column1', 'value1')
-		->insertField('column2', 'value2')
-		->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
-		->where('column3', EQueryOperator::EQUAL, 'value3')
-		->andWhere('column4', EQueryOperator::EQUAL, 'value4')
-		->orWhere('column5', EQueryOperator::EQUAL, 'value5');
+			->into('table')
+			->insertField('column1', 'value1')
+			->insertField('column2', 'value2')
+			->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
+			->where('column3', EQueryOperator::EQUAL, 'value3')
+			->andWhere('column4', EQueryOperator::EQUAL, 'value4')
+			->orWhere('column5', EQueryOperator::EQUAL, 'value5');
 
 		$expectedQuery = 'INSERT INTO table (column1,column2) VALUES (?,?) INNER JOIN table2 ON column1 = column2 WHERE column3 = ? AND column4 = ? OR column5 = ?';
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
-	public function testUpdate() {
+	public function testUpdate()
+	{
 		$query = new Query();
 		$query->update()
-		->from('table')
-		->updateField('column1', 'value1')
-		->updateField('column2', 'value2');
+			->table('table')
+			->updateField('column1', 'value1')
+			->updateField('column2', 'value2');
 
 		$expectedQuery = 'UPDATE table SET column1 = ?,column2 = ?';
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
-	public function testUpdateWhere() {
+	public function testUpdateWhere()
+	{
 		$query = new Query();
 		$query->update()
-		->from('table')
-		->updateField('column1', 'value1')
-		->updateField('column2', 'value2')
-		->where('column3', EQueryOperator::EQUAL, 'value3');
+			->table('table')
+			->updateField('column1', 'value1')
+			->updateField('column2', 'value2')
+			->where('column3', EQueryOperator::EQUAL, 'value3');
 
 		$expectedQuery = 'UPDATE table SET column1 = ?,column2 = ? WHERE column3 = ?';
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
-	public function testUpdateJoinWhereAndOr() {
+	public function testUpdateJoinWhereAndOr()
+	{
 		$query = new Query();
 		$query->update()
-		->from('table')
-		->updateField('column1', 'value1')
-		->updateField('column2', 'value2')
-		->updateField('column3', 'value3')
-		->updateField('column4', 'value4')
-		->updateField('column5', 'value5')
-		->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
-		->where('column3', EQueryOperator::EQUAL, 'value3')
-		->andWhere('column4', EQueryOperator::EQUAL, 'value4')
-		->orWhere('column5', EQueryOperator::EQUAL, 'value5');
+			->table('table')
+			->updateField('column1', 'value1')
+			->updateField('column2', 'value2')
+			->updateField('column3', 'value3')
+			->updateField('column4', 'value4')
+			->updateField('column5', 'value5')
+			->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
+			->where('column3', EQueryOperator::EQUAL, 'value3')
+			->andWhere('column4', EQueryOperator::EQUAL, 'value4')
+			->orWhere('column5', EQueryOperator::EQUAL, 'value5');
 
 		$expectedQuery = 'UPDATE table SET column1 = ?,column2 = ?,column3 = ?,column4 = ?,column5 = ? INNER JOIN table2 ON column1 = column2 WHERE column3 = ? AND column4 = ? OR column5 = ?';
+		$this->assertEquals($expectedQuery, $query->getQuery());
+	}
+
+	public function testDelete()
+	{
+		$query = new Query();
+		$query->delete()
+			->from('table');
+
+		$expectedQuery = 'DELETE FROM table';
+		$this->assertEquals($expectedQuery, $query->getQuery());
+	}
+
+	public function testDeleteOr()
+	{
+		$query = new Query();
+		$query->delete()
+			->from('table')
+			->where('column1', EQueryOperator::EQUAL, 'value1')
+			->orWhere('column2', EQueryOperator::EQUAL, 'value2');
+
+		$expectedQuery = 'DELETE FROM table WHERE column1 = ? OR column2 = ?';
 		$this->assertEquals($expectedQuery, $query->getQuery());
 	}
 
