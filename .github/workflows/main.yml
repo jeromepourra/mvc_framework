@@ -31,7 +31,7 @@ jobs:
 
       - name: Load Database Schema
         run: |
-          mysql -h127.0.0.1 -P3306 -uroot -ppassword test < chemin/vers/votre/script.sql
+          mysql -h127.0.0.1 -P3306 -uroot -ppassword test < /test.sql
 
       - name: Simple echo
         run: echo "Là"
