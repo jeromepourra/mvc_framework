@@ -18,11 +18,13 @@
  */
 
 use lib\App;
-use lib\Controller;
 use lib\Logger;
 use lib\Config;
 use lib\Session;
 use lib\Document;
+
+use core\router\Router;
+use core\database\Database;
 
 function App(): App
 {
@@ -44,9 +46,14 @@ function Document(): Document
 	return Document::Instance();
 }
 
-function Controller(): Controller
+function Router(): Router
 {
-	return Controller::Instance();
+	return Router::Instance();
+}
+
+function Database(): Database
+{
+	return Database::Instance();
 }
 
 function LOGDEBUG(string $message, mixed ...$args): void

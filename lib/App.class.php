@@ -2,40 +2,37 @@
 
 namespace lib;
 
-class App
+class App extends Singleton
 {
-
-	private static ?App $instance = null;
-	
 	private string $urlRoot;
 	private string $docRoot;
 
-	public static function Instance()
-	{
-		if (self::$instance === null) {
-			self::$instance = new App();
-		}
-		return self::$instance;
-	}
-
-	private function __construct()
+	protected function __construct()
 	{
 	}
 
-	public function redirect(string $path, int $code = 200): void
-	{
-		header("Location: " . App()->mkUrl($path));
-		die;
-	}
-
+	/**
+	 * Construit le chemin racine relatif depuis le current working directory
+	 * C://users/me/project_root/current/dir -> ./../../ = C://users/me/project_root
+	 */
 	public function buildRootPath(string $baseDir)
 	{
-		$this->docRoot = $this->buildRoot($baseDir);
+		$cwd = $this->normalisePathSeparator(getcwd());
+		$baseDir = $this->normalisePathSeparator($baseDir);
+		$this->docRoot = $this->buildRoot($baseDir, $cwd);
 	}
 
-	public function buildRootUrl(string $baseDir)
+	/**
+	 * Construit le chemin racine relatif depuis l'URI de la requête
+	 * http://site.xyz/abc/def -> ./../../ = http://site.xyz
+	 */
+	public function buildRootUrl()
 	{
-		$this->urlRoot = $this->buildRoot($baseDir);
+		if (isset($_SERVER['REQUEST_URI'])) {
+			$this->urlRoot = $this->buildRoot("", $_SERVER['REQUEST_URI']);
+		} else {
+			$this->urlRoot = $this->buildRoot("", "/");
+		}
 	}
 
 	public function mkPath(string $path = ""): string
@@ -68,17 +65,28 @@ class App
 		return $this->buildPath($this->docRoot . "www/templates/", $path);
 	}
 
-	private function buildRoot(string $baseDir): string
+	/**
+	 * Construit un chemin relatif vers la racine du projet
+	 * 
+	 * Compare la différence des paths entre la racine et le current working directory (cwd)
+	 * Remonte le fil jusqu'à la racine à partir du cwd
+	 */
+	private function buildRoot(string $baseDir, string $cwd): string
 	{
-		$pathDiff = str_replace($baseDir, "", getcwd());
-		$pathDiffList = explode(DIRECTORY_SEPARATOR, $pathDiff);
+
+		// Root: 	C://
+		// Cwd: 	C://www/xxx
+
+		$pathDiff = str_replace($baseDir, "", $cwd); // www/xxx
+		$pathDiffList = explode("/", $pathDiff); // ["www", "xxx"]
 		$maker = function (string $path, string $item): string {
 			if (!empty ($item)) {
-				$path .= "../";
+				$path .= "../"; // remplace item par ../
 			}
 			return $path;
 		};
-		return array_reduce($pathDiffList, $maker, "./");
+		return array_reduce($pathDiffList, $maker, "./"); // ./../..
+
 	}
 
 	private function buildPath(string $root, string $path = ""): string
@@ -86,8 +94,14 @@ class App
 		if (empty($path)) {
 			return $root;
 		} else {
+			$path = $this->normalisePathSeparator($path);
 			return $root . $path;
 		}
+	}
+
+	private function normalisePathSeparator(string $path)
+	{
+		return str_replace(DIRECTORY_SEPARATOR, "/", $path);
 	}
 
 }

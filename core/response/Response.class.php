@@ -1,0 +1,25 @@
+<?php
+
+namespace core\response;
+
+class Response
+{
+
+	/**
+	 * Renvois un code & un message puis die le processus
+	 */
+	public static function SendCode(array $eCode)
+	{
+		if (isset($eCode['code']) && isset($eCode['message'])) {
+			if (isset($_SERVER['SERVER_PROTOCOL'])) {
+				header($_SERVER['SERVER_PROTOCOL'] . " " . $eCode['code'] . " " . $eCode['message']);
+			} else {
+				header("HTTP/1.1 " . $eCode['code'] . " " . $eCode['message']);
+			}
+			die;
+		} else {
+			LOGERROR("bad parameter");
+		}
+	}
+
+}

@@ -1,26 +1,12 @@
 <?php
 
+use src\controller\HomeController;
+use src\controller\TestController;
+
 require "./../bootstrap.php";
 
-$sUrl = Controller()->getGET("url");
-Controller()->unsetGET("url"); // plus aucune utilité une fois stocké
-
-if ($sUrl !== null) {
-
-	if (empty($sUrl)) {
-		// si la chaine est vide -> $sUrl = "/index.php"
-		$sUrl = "/index.php";
-	}
-
-	$sFilePath = App()->mkWebPath($sUrl);
-
-	if (file_exists($sFilePath)) {
-		LOGDEBUG("Load page: %s", $sFilePath);
-		require_once $sFilePath;
-	} else {
-		LOGDEBUG("Try to load unexisting page: %s", $sFilePath);
-	}
-
-}
+Router()->register(HomeController::class);
+Router()->register(TestController::class);
+Router()->load($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
 require "./../end.php";

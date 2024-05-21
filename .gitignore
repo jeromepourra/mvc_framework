@@ -3,6 +3,8 @@
 *.env
 *.txt
 
+tools/.phpunit.result.cache
+
 # Dossier des logs
 logs/
 

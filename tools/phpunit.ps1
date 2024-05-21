@@ -1,1 +1,1 @@
-php tools/phpunit.phar --bootstrap tests/bootstrap.php --include-path tests
+php tools/phpunit.phar --configuration ./tools/phpunit.xml

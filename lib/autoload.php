@@ -54,7 +54,7 @@
 				}
 			}
 
-			LOGDEBUG("[AUTOLOAD] loading %s: %s", $sType, $sName);
+			// LOGDEBUG("[AUTOLOAD] loading %s: %s", $sType, $sName);
 
 			
 		} catch (Throwable $th) {

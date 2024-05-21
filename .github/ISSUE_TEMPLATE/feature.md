@@ -1,7 +1,7 @@
 ---
 name: Nouvelle fonctionnalité
 about: Proposez une nouvelle fonctionnalité pour l'application
-title: "[Fonctionnalité] Titre de la nouvelle fonctionnalité"
+title: "Titre de la nouvelle fonctionnalité"
 
 ---
 
@@ -24,8 +24,12 @@ Donnez une idée de la façon dont vous envisagez de mettre en œuvre cette fonc
 - [ ] Tâche 3
 
 ## Critères d'acceptation
-
-Définissez les critères qui doivent être satisfaits pour considérer cette fonctionnalité comme terminée.
+- [ ] La description de la fonctionnalité est claire et concise.
+- [ ] Le contexte de la fonctionnalité est bien expliqué.
+- [ ] La proposition de solution est réalisable et bien présentée.
+- [ ] Les tâches à accomplir sont listées et vérifiables.
+- [ ] Les critères d'acceptation sont définis et mesurables.
+- [ ] Toute autre information pertinente est incluse.
 
 ## Autres informations
 

@@ -10,11 +10,16 @@
 **************************************************
 */
 
-require __DIR__ . "/lib/wrapper.php";
-require __DIR__ . "/lib/App.class.php";
+// Normalisation du path "\" -> "/"
+define("__BOOTSTRAP_DIR__", str_replace(DIRECTORY_SEPARATOR, "/", __DIR__));
 
-App()->buildRootPath(__DIR__);
-App()->buildRootUrl(__DIR__ . DIRECTORY_SEPARATOR . "www");
+require __BOOTSTRAP_DIR__ . "/lib/wrapper.php";
+require __BOOTSTRAP_DIR__ . "/lib/Singleton.class.php"; // FIX ME
+require __BOOTSTRAP_DIR__ . "/lib/App.class.php";
+
+// Initialisation des chemin racine (relatifs) de l'app
+App()->buildRootPath(__BOOTSTRAP_DIR__);
+App()->buildRootUrl();
 
 require App()->mkPath("lib/functions.php");
 require App()->mkPath("lib/autoload.php");
@@ -23,10 +28,6 @@ require App()->mkPath("lib/autoload.php");
 Config()->loadEnvFile(App()->mkPath(".env"));
 
 // Charge la configuration de PHP
-require App()->mkPath("lib/php_config.php");
-
-Session();
-
-LOGDEBUG("___BOOTSTRAP___");
+// require App()->mkPath("ini.php");
 
 BufferOn();

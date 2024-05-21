@@ -3,14 +3,6 @@
 #####################################################
 Options -Indexes
 
-
-############################################
-# Redirect toutes les URL vers www/begin.php
-# Sauf les dossier www/public/ et www/ajax/
-############################################
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /
-	RewriteCond %{REQUEST_URI} \.php$ [NC]
-	RewriteRule (^.*$) root.php?url=$1 [L,QSA]
-</IfModule>
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !\.(ico|css|js|svg|png|jpg|jpeg)$ [NC]
+RewriteRule (^.*$) root.php [L,QSA]
