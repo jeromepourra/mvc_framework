@@ -13,6 +13,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         ports:
           - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout repository
@@ -30,7 +31,7 @@ jobs:
 
       - name: Load Database Schema
         run: |
-          mysql -h127.0.0.1 -P3306 -u root -p password test < chemin/vers/votre/script.sql
+          mysql -h 127.0.0.1 -P3306 -u root -p password test < chemin/vers/votre/script.sql
 
       - name: Simple echo
         run: echo "Là"
