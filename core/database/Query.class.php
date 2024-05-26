@@ -24,19 +24,15 @@ class Query
 	private bool $useDistinct = false;				// DISTINCT
 
 	private ?string $table = null;					// Table de requête
-	private ?string $fromTable = null;				// Table de sélection
-	private ?string $intoTable = null;				// Table d'insertion
 
 	/** @var string[] */
-	private array $select = [];						// Fields de retour
+	private array $selectList = [];					// Fields de retour
 
 	/** @var QueryInsert[] */
 	private array $insert = [];						// Fields d'insertion
 
 	/** @var QueryUpdate[] */
 	private array $update = [];						// Fields de mise à jour
-
-	private string $delete = "";					// Table de suppression
 
 	/** @var QueryJoin[] */
 	private array $joinList = []; 					// Liste des jointures
@@ -49,7 +45,7 @@ class Query
 	private ?int $offset = null;					// Décale le curseur de retour
 
 	/** @var QueryBinding[] */
-	private array $bindings = [];					// Liste des valeurs à bind sur la query
+	private array $bindList = [];					// Liste des valeurs à bind sur la query
 	private int $bindIndex = 0;						// Index courant de la valeur a bind
 
 	/** @var string[] */
@@ -57,6 +53,7 @@ class Query
 
 	public function __construct()
 	{
+		// Récupère la connexion à la base de données
 		$this->db = Database();
 	}
 
@@ -77,7 +74,7 @@ class Query
 	public function select(string ...$sColumns): self
 	{
 		$this->clearUsed(); // Reset les types de requête
-		$this->select = array_merge($this->select, $sColumns);
+		$this->selectList = array_merge($this->selectList, $sColumns);
 		$this->useSelect = true;
 		return $this;
 	}
@@ -109,46 +106,44 @@ class Query
 		return $this;
 	}
 
-	public function table(string $sTable): self
+	public function table(string $sTable, string $sAlias = null): self
 	{
 		$this->table = $sTable;
 		return $this;
 	}
 
-	public function from(string $sTable): self
+	public function from(string $sTable, ?string $sAlias = null): self
 	{
-		$this->fromTable = $sTable;
-		return $this;
+		return $this->table($sTable, $sAlias);
 	}
 
-	public function into(string $sTable): self
+	public function into(string $sTable, ?string $sAlias = null): self
 	{
-		$this->intoTable = $sTable;
-		return $this;
+		return $this->table($sTable, $sAlias);
 	}
 
 	// JOINTURES
 	// =========
 
-	public function join(string $sTable, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue, EQueryJoin $sType = EQueryJoin::INNER): self
+	public function join(string $sTable, ?string $sAlias, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue, EQueryJoin $sType = EQueryJoin::INNER): self
 	{
-		$this->joinList[] = new QueryJoin($sTable, $mFirstValue, $sOperator, $mSecondValue, $sType);
+		$this->joinList[] = new QueryJoin($sTable, $sAlias, $mFirstValue, $sOperator, $mSecondValue, $sType);
 		// Build un tableau avec les deux valeurs à bind, puis parcours
 		foreach ([$mFirstValue, $mSecondValue] as $mValue) {
 			$this->bindIndex++; // Index du bind param au moment de construire la requête préparée
-			$this->bindings[] = new QueryBinding($mValue, $this->bindIndex);
+			$this->bindList[] = new QueryBinding($mValue, $this->bindIndex);
 		}
 		return $this;
 	}
 
-	public function leftJoin(string $sTable, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue): self
+	public function leftJoin(string $sTable, ?string $sAlias, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue): self
 	{
-		return $this->join($sTable, $mFirstValue, $sOperator, $mSecondValue, EQueryJoin::LEFT);
+		return $this->join($sTable, $sAlias, $mFirstValue, $sOperator, $mSecondValue, EQueryJoin::LEFT);
 	}
 
-	public function rightJoin(string $sTable, string $mFirstValue, EQueryOperator $sOperator, string $mSecondValue): self
+	public function rightJoin(string $sTable, ?string $sAlias, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue): self
 	{
-		return $this->join($sTable, $mFirstValue, $sOperator, $mSecondValue, EQueryJoin::RIGHT);
+		return $this->join($sTable, $sAlias, $mFirstValue, $sOperator, $mSecondValue, EQueryJoin::RIGHT);
 	}
 
 	// CONDITIONS
@@ -159,7 +154,7 @@ class Query
 		$this->whereList[] = new QueryWhere($sColumn, $sOperator, $mValue, $sDoor);
 		if ($mValue !== null) {
 			$this->bindIndex++; // Index du bind param au moment de construire la requête préparée
-			$this->bindings[] = new QueryBinding($mValue, $this->bindIndex);
+			$this->bindList[] = new QueryBinding($mValue, $this->bindIndex);
 		}
 		return $this;
 	}
@@ -213,7 +208,7 @@ class Query
 	{
 		$this->insert[] = new QueryInsert($sColumn, $mValue);
 		$this->bindIndex++; // Index du bind param au moment de construire la requête préparée
-		$this->bindings[] = new QueryBinding($mValue, $this->bindIndex);
+		$this->bindList[] = new QueryBinding($mValue, $this->bindIndex);
 		return $this;
 	}
 
@@ -224,7 +219,7 @@ class Query
 	{
 		$this->update[] = new QueryUpdate($sColumn, $mValue);
 		$this->bindIndex++; // Index du bind param au moment de construire la requête préparée
-		$this->bindings[] = new QueryUpdate($mValue, $this->bindIndex);
+		$this->bindList[] = new QueryUpdate($mValue, $this->bindIndex);
 		return $this;
 	}
 
@@ -239,10 +234,10 @@ class Query
 			$this->queryList[] = EQueryClause::DISTINCT->value;
 		}
 
-		if (empty($this->select)) {
+		if (empty($this->selectList)) {
 			$this->queryList[] = "*";
 		} else {
-			$this->queryList[] = implode(",", $this->select);
+			$this->queryList[] = implode(",", $this->selectList);
 		}
 
 		$this->buildFrom();
@@ -284,17 +279,17 @@ class Query
 
 	private function buildFrom(): void
 	{
-		if ($this->fromTable !== null) {
+		if ($this->table !== null) {
 			$this->queryList[] = EQueryClause::FROM->value;
-			$this->queryList[] = $this->fromTable;
+			$this->queryList[] = $this->table;
 		}
 	}
 
 	private function buildInto(): void
 	{
-		if ($this->intoTable !== null) {
+		if ($this->table !== null) {
 			$this->queryList[] = EQueryClause::INTO->value;
-			$this->queryList[] = $this->intoTable;
+			$this->queryList[] = $this->table;
 		}
 	}
 
@@ -306,6 +301,12 @@ class Query
 				$this->queryList[] = $oJoin->type->value;
 				$this->queryList[] = EQueryClause::JOIN->value;
 				$this->queryList[] = $oJoin->table;
+
+				if ($oJoin->alias !== null) {
+					$this->queryList[] = EQueryClause::AS->value;
+					$this->queryList[] = $oJoin->alias;
+				}
+
 				$this->queryList[] = EQueryClause::ON->value;
 				$this->queryList[] = $oJoin->firstValue;
 				$this->queryList[] = $oJoin->operator->value;
@@ -386,11 +387,22 @@ class Query
 	}
 
 	/**
+	 * Cette méthode permet de bind une valeur à un paramètre nommé ou non au moment de la requête préparée. Evite les injections SQL.
+	 * @param mixed $mValue Valeur à bind
+	 * @return Query $this
+	 */
+	public function bindValue(mixed $mValue): self {
+		$this->bindIndex++;
+		$this->bindList[] = new QueryBinding($mValue, $this->bindIndex);
+		return $this;
+	}
+
+	/**
 	 * @return QueryBinding[]
 	 */
 	public function getBindings(): array
 	{
-		return $this->bindings;
+		return $this->bindList;
 	}
 
 }

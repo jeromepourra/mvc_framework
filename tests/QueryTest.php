@@ -26,15 +26,23 @@ class QueryTest extends TestCase
 	public function testJoin(): void
 	{
 		$query = new Query();
-		$query->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER);
+		$query->join('table2', null, 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER);
 		$expected = "INNER JOIN table2 ON column1 = column2";
+		$this->assertEquals($expected, $query->getQuery());
+	}
+
+	public function testJoinAlias(): void
+	{
+		$query = new Query();
+		$query->join('table2', 't2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER);
+		$expected = "INNER JOIN table2 AS t2 ON column1 = column2";
 		$this->assertEquals($expected, $query->getQuery());
 	}
 
 	public function testLeftJoin(): void
 	{
 		$query = new Query();
-		$query->leftJoin('table2', 'column1', EQueryOperator::EQUAL, 'column2');
+		$query->leftJoin('table2', null, 'column1', EQueryOperator::EQUAL, 'column2');
 		$expected = "LEFT OUTER JOIN table2 ON column1 = column2";
 		$this->assertEquals($expected, $query->getQuery());
 	}
@@ -42,7 +50,7 @@ class QueryTest extends TestCase
 	public function testRightJoin(): void
 	{
 		$query = new Query();
-		$query->rightJoin('table2', 'column1', EQueryOperator::EQUAL, 'column2');
+		$query->rightJoin('table2', null, 'column1', EQueryOperator::EQUAL, 'column2');
 		$expected = "RIGHT OUTER JOIN table2 ON column1 = column2";
 		$this->assertEquals($expected, $query->getQuery());
 	}
@@ -149,7 +157,7 @@ class QueryTest extends TestCase
 		$query = new Query();
 		$query->select('column1', 'column2')
 			->from('table1')
-			->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
+			->join('table2', null, 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
 			->where('column3', EQueryOperator::EQUAL, 'value')
 			->andWhere('column4', EQueryOperator::EQUAL, 'value')
 			->orWhere('column5', EQueryOperator::EQUAL, 'value')
@@ -192,7 +200,7 @@ class QueryTest extends TestCase
 			->into('table')
 			->insertField('column1', 'value1')
 			->insertField('column2', 'value2')
-			->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
+			->join('table2', null, 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
 			->where('column3', EQueryOperator::EQUAL, 'value3')
 			->andWhere('column4', EQueryOperator::EQUAL, 'value4')
 			->orWhere('column5', EQueryOperator::EQUAL, 'value5');
@@ -236,7 +244,7 @@ class QueryTest extends TestCase
 			->updateField('column3', 'value3')
 			->updateField('column4', 'value4')
 			->updateField('column5', 'value5')
-			->join('table2', 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
+			->join('table2', null, 'column1', EQueryOperator::EQUAL, 'column2', EQueryJoin::INNER)
 			->where('column3', EQueryOperator::EQUAL, 'value3')
 			->andWhere('column4', EQueryOperator::EQUAL, 'value4')
 			->orWhere('column5', EQueryOperator::EQUAL, 'value5');
