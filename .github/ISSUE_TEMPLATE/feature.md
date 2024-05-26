@@ -1,8 +1,8 @@
 ---
 name: Nouvelle fonctionnalité
 about: Proposez une nouvelle fonctionnalité pour l'application
-title: "Titre de la nouvelle fonctionnalité"
-
+title: "[FEATURE] Titre de la nouvelle fonctionnalité"
+labels: "feature"
 ---
 
 ## Description de la fonctionnalité
