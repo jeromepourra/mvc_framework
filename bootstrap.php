@@ -10,19 +10,19 @@
 **************************************************
 */
 
-// Normalisation du path "\" -> "/"
+// Chemin racine de l'application (ce dossier)
 define("__BOOTSTRAP_DIR__", str_replace(DIRECTORY_SEPARATOR, "/", __DIR__));
 
+// Chargement de l'autoloader en premier lieu
+require __BOOTSTRAP_DIR__ . "/lib/autoload.php";
+
+// Chargement du wrapper et des fonctions
 require __BOOTSTRAP_DIR__ . "/lib/wrapper.php";
-require __BOOTSTRAP_DIR__ . "/lib/Singleton.php"; // FIX ME
-require __BOOTSTRAP_DIR__ . "/lib/App.php";
+require __BOOTSTRAP_DIR__ . "/lib/functions.php";
 
 // Initialisation des chemin racine (relatifs) de l'app
 App()->buildRootPath(__BOOTSTRAP_DIR__);
 App()->buildRootUrl();
-
-require App()->mkPath("lib/functions.php");
-require App()->mkPath("lib/autoload.php");
 
 // Charge les variables d'environnement dans la config
 if (defined("__PHPUNIT_RUNNING__") && __PHPUNIT_RUNNING__ === true) {
@@ -34,4 +34,5 @@ if (defined("__PHPUNIT_RUNNING__") && __PHPUNIT_RUNNING__ === true) {
 // Charge la configuration de PHP
 require App()->mkPath("ini.php");
 
+// Active le buffer de sortie
 BufferOn();

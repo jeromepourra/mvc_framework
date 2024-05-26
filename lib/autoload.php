@@ -7,7 +7,7 @@
 	$success = spl_autoload_register(function (string $sName) use ($sFileExtension) {
 
 		$sPath = str_replace("\\", "/", $sName);
-		$sFullPath = App()->mkPath($sPath . $sFileExtension);
+		$sFullPath = __BOOTSTRAP_DIR__ . "/" . $sPath . $sFileExtension;
 
 		if (!file_exists($sFullPath)) {
 			throw new Exception("file $sFullPath does not exist");
