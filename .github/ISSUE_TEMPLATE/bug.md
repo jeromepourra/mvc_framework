@@ -1,8 +1,8 @@
 ---
 name: Rapport de bug
 about: Rapportez un bug pour améliorer l'application
-title: "Titre du bug"
-
+title: "[BUG] Titre du bug"
+labels: "bug"
 ---
 
 ## Description
