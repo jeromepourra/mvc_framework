@@ -14,8 +14,8 @@
 define("__BOOTSTRAP_DIR__", str_replace(DIRECTORY_SEPARATOR, "/", __DIR__));
 
 require __BOOTSTRAP_DIR__ . "/lib/wrapper.php";
-require __BOOTSTRAP_DIR__ . "/lib/Singleton.class.php"; // FIX ME
-require __BOOTSTRAP_DIR__ . "/lib/App.class.php";
+require __BOOTSTRAP_DIR__ . "/lib/Singleton.php"; // FIX ME
+require __BOOTSTRAP_DIR__ . "/lib/App.php";
 
 // Initialisation des chemin racine (relatifs) de l'app
 App()->buildRootPath(__BOOTSTRAP_DIR__);

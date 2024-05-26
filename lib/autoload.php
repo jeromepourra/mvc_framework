@@ -23,16 +23,15 @@
 
 (function () {
 
-	$sFileExt = ".class.php";
+	$sFileExtension = ".php";
 
-	$success = spl_autoload_register(function (string $sName) use ($sFileExt) {
+	$success = spl_autoload_register(function (string $sName) use ($sFileExtension) {
 
 		$sPath = str_replace("\\", "/", $sName);
-		$sFullPath = App()->mkPath($sPath . $sFileExt);
+		$sFullPath = App()->mkPath($sPath . $sFileExtension);
 
 		if (!file_exists($sFullPath)) {
-			LOGERROR("file %s does not exist", $sFullPath);
-			return;
+			throw new Exception("file $sFullPath does not exist");
 		}
 
 		require $sFullPath;
@@ -44,19 +43,16 @@
 
 			if ($sType === "interface") {
 				if (!interface_exists($sName)) {
-					LOGERROR("interface %s does not exist", $sName);
-					return;
+					throw new Exception("interface $sName does not exist");
 				}
 			} else {
 				if (!class_exists($sName)) {
-					LOGERROR("class %s does not exist", $sName);
-					return;
+					throw new Exception("class $sName does not exist");
 				}
 			}
 
 			// LOGDEBUG("[AUTOLOAD] loading %s: %s", $sType, $sName);
 
-			
 		} catch (Throwable $th) {
 			throw $th;
 		}
@@ -64,7 +60,7 @@
 	});
 
 	if (!$success) {
-		LOGERROR("can't call function spl_autoload_register");
+		throw new Exception("failure on function spl_autoload_register");
 	}
 
 })();
