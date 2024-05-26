@@ -10,24 +10,19 @@ enum EQueryStatement: string {
 }
 
 enum EQueryClause: string {
-	
 	case FROM = "FROM";
 	case INTO = "INTO";
 	case DISTINCT = "DISTINCT";
-
 	case WHERE = "WHERE";
 	case LIMIT = "LIMIT";
 	case OFFSET = "OFFSET";
-
 	case ORDER_BY = "ORDER BY";
 	case GROUP_BY = "GROUP BY";
-
 	case JOIN = "JOIN";
 	case ON = "ON";
-
 	case SET = "SET";
 	case VALUES = "VALUES";
-
+	case AS = "AS";
 }
 
 enum EQueryDoor: string {
