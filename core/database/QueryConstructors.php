@@ -30,15 +30,26 @@ class QueryUpdate
 
 class QueryJoin
 {
-	public EQueryJoin $type; 					// Type de jointure
-	public string $table;						// Table à joindre
-	public mixed $firstValue;					// Valeur de condition 1
-	public EQueryOperator $operator; 			// L'opérateur à appliquer
-	public mixed $secondValue;					// Valeur de condition 2
-	public function __construct(string $sTable, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue, EQueryJoin $sType)
+	public EQueryJoin $type;
+	public string $table;
+	public ?string $alias;
+	public mixed $firstValue;
+	public EQueryOperator $operator;
+	public mixed $secondValue;
+
+	/**
+	 * @param string $sTable Table à joindre
+	 * @param ?string $sAlias Alias de la table (null si pas d'alias)
+	 * @param mixed $mFirstValue Premiere valeur/colonne de condition
+	 * @param EQueryOperator $sOperator L'opérateur de condition
+	 * @param mixed $mSecondValue Seconde valeur/colonne de condition
+	 * @param EQueryJoin $sType Type de jointure
+	 */
+	public function __construct(string $sTable, ?string $sAlias, mixed $mFirstValue, EQueryOperator $sOperator, mixed $mSecondValue, EQueryJoin $sType)
 	{
 		$this->type = $sType;
 		$this->table = $sTable;
+		$this->alias = $sAlias;
 		$this->firstValue = $mFirstValue;
 		$this->operator = $sOperator;
 		$this->secondValue = $mSecondValue;
