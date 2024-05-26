@@ -30,11 +30,11 @@ jobs:
 
       - name: Create Database
         run: |
-          mysql -h127.0.0.1 -P3306 -uroot -ppassword -e"CREATE DATABASE IF NOT EXISTS test;"
+          mysql -hlocalhost -P3306 -uroot -ppassword -e"CREATE DATABASE IF NOT EXISTS test;"
 
       - name: Load Database Schema
         run: |
-          mysql -h127.0.0.1 -P3306 -uroot -ppassword test < _test.sql
+          mysql -hlocalhost -P3306 -uroot -ppassword test < _test.sql
 
       - name: Simple echo
         run: echo "Database has been created and schema has been loaded"
