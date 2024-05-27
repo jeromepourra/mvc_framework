@@ -1,1 +1,2 @@
-php tools/phpunit.phar --configuration ./tools/phpunit.xml
+#!/bin/bash
+php tools/phpunit.phar -c ./tools/phpunit.xml
