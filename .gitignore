@@ -9,9 +9,6 @@
 # Fichier script sql de test
 !*_test.sql
 
-# Cache local de PHPunit
-tools/.phpunit.result.cache
-
 # Dossier des logs
 logs/
 
@@ -22,6 +19,9 @@ tmp/
 vendor/
 composer.lock
 composer.phar
+
+# Cache local de PHPunit
+.phpunit.result.cache
 
 # Alias bash
 .profile
