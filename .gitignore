@@ -17,3 +17,11 @@ logs/
 
 # Dossier des fichiers temporaires
 tmp/
+
+# Dossier des dépendances
+vendor/
+composer.lock
+composer.phar
+
+# Alias bash
+.profile
