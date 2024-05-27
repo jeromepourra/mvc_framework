@@ -37,7 +37,7 @@ class Config
 	{
 		$this->config = [];
 		$this->config['error_reporting'] = E_ALL;
-		$this->config['error_log'] = App()->mkPath("logs/error.log");
+		$this->config['error_log'] = App()->mkPath("logs/php.error.log");
 		$this->config['session.save_path'] = App()->mkPath("tmp");
 		$this->config['xdebug.var_display_max_depth'] = -1;
 		$this->config['xdebug.var_display_max_children'] = -1;
