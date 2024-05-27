@@ -25,9 +25,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         
-      - name: Simple echo
-        run: echo "The ${{ github.repository }} repository has been cloned"
-
       - name: Create Database
         run: |
           mysql -h127.0.0.1 -P3306 -uroot -ppassword -e"CREATE DATABASE IF NOT EXISTS test;"
@@ -36,8 +33,14 @@ jobs:
         run: |
           mysql -h127.0.0.1 -P3306 -uroot -ppassword test < _test.sql
 
-      - name: Simple echo
-        run: echo "Database has been created and schema has been loaded"
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run phpunit.phar
-        run: bash tools/phpunit.sh
+        run: ./vendor/bin/phpunit -c ./phpunit.xml
