@@ -1,1 +1,0 @@
-php tools/phpunit.phar --configuration ./tools/phpunit.xml
